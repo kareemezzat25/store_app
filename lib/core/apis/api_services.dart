@@ -19,9 +19,7 @@ class ApiServices {
       }).toList();
       log("Products length: ${products.length}");
       return products;
-    } catch (e, stack) {
-      log("🔍 StackTrace: $stack");
-
+    } catch (e) {
       throw Exception("Some Thing went Wrong when i fetch of all products");
     }
   }
@@ -66,6 +64,28 @@ class ApiServices {
       );
     } catch (e) {
       throw Exception("Some Thing Went Wrong When add Product");
+    }
+  }
+
+  Future<void> updateProduct({
+    required ProductsModel product,
+    required Function() onLoading,
+    required Function() onSuccess,
+    required Function(String message) onFailure,
+  }) async {
+    try {
+      onLoading();
+      await apiManager.putData(AppEndpoints.updateProduct(product.id!), {
+        "title": product.title,
+        "description": product.description,
+        "price": product.price,
+        "image": product.image,
+        "category": product.category,
+      });
+      onSuccess();
+    } catch (e) {
+      onFailure("SomeThing when Update data");
+      throw Exception("SomeThing Went Wrong when Update the data of product");
     }
   }
 }

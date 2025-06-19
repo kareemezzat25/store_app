@@ -9,7 +9,7 @@ class AppEndpoints {
 
   static const String addProduct = "https://fakestoreapi.com/products";
 
-  static String updateProduct(String id) {
+  static String updateProduct(int id) {
     return "https://fakestoreapi.com/products/$id";
   }
 }

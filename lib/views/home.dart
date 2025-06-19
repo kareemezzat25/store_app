@@ -38,17 +38,20 @@ class HomeView extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: Colors.blue));
           }
-          log("${snapshot.data?.length ?? 0}");
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
+          return RefreshIndicator(
+            onRefresh: () =>
+                ApiServices(apiManager: ApiManager()).getAllProducts(),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+              ),
+              itemCount: snapshot.data?.length ?? 0,
+              itemBuilder: (context, index) {
+                return ProductCard(product: snapshot.data![index]);
+              },
             ),
-            itemCount: snapshot.data?.length ?? 0,
-            itemBuilder: (context, index) {
-              return ProductCard(product: snapshot.data![index]);
-            },
           );
         },
       ),
