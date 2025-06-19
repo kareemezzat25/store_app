@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storeapp/views/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: Scaffold(),
+      routes: {HomeView.routeName: (context) => HomeView()},
+      initialRoute: HomeView.routeName,
     );
   }
 }

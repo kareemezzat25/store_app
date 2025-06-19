@@ -52,6 +52,22 @@ class ApiManager {
     }
   }
 
+  Future<Response> putData(
+    String endpoint,
+    Map<String, dynamic> body, {
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      return await _dio.put(
+        endpoint,
+        data: body,
+        options: Options(headers: headers),
+      );
+    } on DioError catch (e) {
+      throw Exception("Failed to update:$e");
+    }
+  }
+
   Future<Response> deleteData(
     String endpoint,
     Map<String, dynamic>? headers,

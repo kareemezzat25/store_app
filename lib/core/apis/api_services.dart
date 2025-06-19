@@ -1,17 +1,27 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:storeapp/core/apis/api_manager.dart';
 import 'package:storeapp/core/resources/endpoints.dart';
+import 'package:storeapp/models/product_model.dart';
 import 'package:storeapp/models/products_model.dart';
 
 class ApiServices {
   ApiManager apiManager;
   ApiServices({required this.apiManager});
-  Future<ProductsModel> getAllProducts() async {
+  Future<List<ProductsModel>> getAllProducts() async {
     try {
       var response = await apiManager.getData(AppEndpoints.getAllProducts);
-      ProductsModel productsModel = ProductsModel.fromJson(response.data);
-      return productsModel;
-    } catch (e) {
+      List<dynamic> dataList = response.data;
+
+      List<ProductsModel> products = dataList.map((item) {
+        return ProductsModel.fromJson(item);
+      }).toList();
+      log("Products length: ${products.length}");
+      return products;
+    } catch (e, stack) {
+      log("🔍 StackTrace: $stack");
+
       throw Exception("Some Thing went Wrong when i fetch of all products");
     }
   }
@@ -38,6 +48,24 @@ class ApiServices {
       throw Exception(
         "Some Thing Went Wrong when i fetch products with CategoryName",
       );
+    }
+  }
+
+  Future<void> addProduct({required ProductModel product}) async {
+    try {
+      await apiManager.postData(
+        AppEndpoints.addProduct,
+        {
+          "title": product.title,
+          "price": product.price,
+          "description": product.description,
+          "image": product.image,
+          "category": product.category,
+        },
+        headers: {"Content-Type": "text/plain"},
+      );
+    } catch (e) {
+      throw Exception("Some Thing Went Wrong When add Product");
     }
   }
 }
